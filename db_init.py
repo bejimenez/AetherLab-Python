@@ -4,13 +4,14 @@ def initialize_db(db_path="mtg_collection.db"):
     con = sqlite3.connect(db_path)
     cur = con.cursor()
 
-    # --- Cards Table ---
+    # --- CARDS Table ---
+    # Contains all Scryfall cards you import. Only 1 row per print/edition.
     cur.execute("""
     CREATE TABLE IF NOT EXISTS cards (
         id TEXT PRIMARY KEY,                 -- Scryfall card UUID (unique per print)
         oracle_id TEXT,                      -- Links reprints of the same card
         name TEXT,                           -- Composite name for double-faced cards (ex: 'Fire // Ice')
-        set TEXT,                            -- Set code
+        "set" TEXT,                            -- Set code
         collector_number TEXT,               -- Human-readable collector number
         lang TEXT,                           -- Language code
         layout TEXT,                         -- Card layout (normal, split, transform, etc.)
@@ -55,8 +56,9 @@ def initialize_db(db_path="mtg_collection.db"):
         UNIQUE(id)
     );
     """)
-    
-    # --- Card Faces Table ---
+
+    # --- CARD_FACES Table (optional, for multifaced cards) ---
+    # If you want to allow your app to show preview/stats for individual faces of DFCs, you can normalize them here.
     cur.execute("""
     CREATE TABLE IF NOT EXISTS card_faces (
         card_id TEXT,                  -- FK to cards.id
@@ -154,10 +156,13 @@ def initialize_db(db_path="mtg_collection.db"):
     )
     """)
 
+    # --- STATS Table (optional, but usually generated on the fly with SQL, not stored) ---
+    # leave this table out; can use SQL to COUNT/AVG/ETC directly.
+    # To store snapshots, add a stats table here later.
+
     con.commit()
     con.close()
-    print ("Database tables created or verified.")
+    print("Database tables created or verified.")
 
 if __name__ == "__main__":
     initialize_db()
-    print("Database initialized successfully.")
