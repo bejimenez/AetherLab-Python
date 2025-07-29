@@ -26,7 +26,7 @@ Users may export/import their collections as JSON files for backup and migration
 
 # Major Features
 1. **User Management**
-Multiple users (hardcoded or user-creatable)
+Multiple users (hardcoded)
 Per-user collections, decks, and session context
 2. **Card Database**
 All physical MTG cards from Scryfall’s oracle bulk file
